@@ -13,7 +13,7 @@ body {
 .container {
     display:  grid;
     grid-template-columns: repeat(4,70px);
-    grid-template-rows: repeat(6, 60px);
+    grid-template-rows: repeat(6, 50px);
     grid-gap: 5px 5px;
     width: fit-content;
     margin: auto;
@@ -29,16 +29,17 @@ body {
     font-size: 2em;
 }
 
-#inputcontainer { grid-column: 1 / 5; }
-#btn0 { grid-column: 1 / 3;}
-
-#inputcontainer input {
-    background: transparent;
-    border-style: none;
-    font-size: 1.5em;
-    height: 100%;
-    outline: none;
+#display { 
+    grid-column: 1 / 5; 
+    text-align: center;
+}
+#displaytxt {
     text-align: right;
     width: 90%;
-    
+    height: 80%;
+    margin: 0.2em auto 0 auto;
 }
+
+
+#btn0 { grid-column: 1 / 3;}
+
