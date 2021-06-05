@@ -1,38 +1,34 @@
 
-const add = (a,b)=> a + b;
-const substract = (a,b)=> a - b;
-const multiply = (a,b) => a * b;
-const divide = (a,b) => a/b;
-const percentage = (a) => a/100;
-const shiftSign = (a) => (a*(-1));
+const add = (a,b)=> parseInt(a) + parseInt(b);
+const substract = (a,b)=> parseInt(a) - parseInt(b);
+const multiply = (a,b) => parseInt(a) * parseInt(b);
+const divide = (a,b) => parseInt(a)/parseInt(b);
+const percentage = (a) => parseInt(a)/100;
+const shiftSign = (a) => (parseInt(a)*(-1));
 
 
 function operate (opt, a, b ) {
 
     switch( opt ){
-        case 'add':
-            add(a,b);
-        case 'sub':
-            substract(a,b);
-        case 'mul':
-            multiply(a,b);
-        case 'div':
-            divide(a,b);
-        case 'per':
-            percentage(a);
-        case 'shi':
-            shiftSign(a);
+        case '+':
+            
+            return add(a,b);
+        case '-':
+            return substract(a,b);
+        case '*':
+            return multiply(a,b);
+        case '/':
+            return divide(a,b);
+        case '%':
+            return percentage(a);
+        case '!':
+            return shiftSign(a);
         default:
-            ':(';
+            return ':(';
     }
 
 }
 
 module.exports = {
-    add,
-    substract,
-    multiply,
-    divide,
-    percentage,
-    shiftSign
+    operate
 }
