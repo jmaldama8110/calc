@@ -1,13 +1,19 @@
 
+/** PENDIENTES 09/Jun/2021
+ *  1. Add "backspace" support
+ *  2. Decimal point does not work when entering the second value
+ *  3. Still to workout how to use single operation options
+ */
+
+
 let firstNumber = 0, secondNumber = 0, result = 0, operator = '';
 let display = '';
-
 
 window.addEventListener('keydown', function (e) {
 
     let key = e.key;
     if (key == 'Enter')
-        key = '=';
+            key = '=';
     processEntryKey(key);
 });
 
@@ -61,7 +67,8 @@ function processEntryKey(eKey) {
             }
         }
     } else {
-        if (!secondNumber) {
+
+        if (!secondNumber ) {
             display = '';
             setDisplay(display);
         }
@@ -74,16 +81,15 @@ function processEntryKey(eKey) {
 
         }
 
-        if (entry.type == 'equal') {
+        if (entry.type == 'equal' || entry.type == 'operator') {
+            secondNumber = parseFloat(display);
             result = operate(operator, firstNumber, secondNumber);
             display = Math.round(result * 100000000 + Number.EPSILON) / 100000000;
             setDisplay(display);
-
+            
             firstNumber = 0;
-            display = '';
             secondNumber = 0;
-            
-            
+ 
         }
 
     }
