@@ -3,10 +3,12 @@ let firstNumber = 0, secondNumber = 0, result = 0, operator = '';
 let display = '';
 
 
-window.addEventListener('keypress', function (e) {
-    if (e.key == 'Enter')
-        processEntryKey('=');
-    processEntryKey(e.key);
+window.addEventListener('keydown', function (e) {
+
+    let key = e.key;
+    if (key == 'Enter')
+        key = '=';
+    processEntryKey(key);
 });
 
 
@@ -28,7 +30,7 @@ buttons.forEach((item) => {
 
         const digit = this.textContent;
 
-        if (digit == 'AC'){
+        if (digit == 'AC') {
             clearEntries();
             setDisplay('0');
         } // when the Clear buttons is pressed
@@ -41,6 +43,8 @@ buttons.forEach((item) => {
 function processEntryKey(eKey) {
 
     const entry = entryType(eKey);
+
+    if( !entry.type ) return;
 
     if (!firstNumber) { // as many numbers and one DOT as the firstValue is no assigned
         if (entry.type == 'number' ||
@@ -57,7 +61,7 @@ function processEntryKey(eKey) {
             }
         }
     } else {
-        if (!secondNumber){
+        if (!secondNumber) {
             display = '';
             setDisplay(display);
         }
@@ -72,8 +76,14 @@ function processEntryKey(eKey) {
 
         if (entry.type == 'equal') {
             result = operate(operator, firstNumber, secondNumber);
-            display = parseFloat(result);
+            display = Math.round(result * 100000000 + Number.EPSILON) / 100000000;
             setDisplay(display);
+
+            firstNumber = 0;
+            display = '';
+            secondNumber = 0;
+            
+            
         }
 
     }
@@ -126,6 +136,12 @@ const entryType = (key) => {
             operator: key,
             singleOperator: false
         }
+    }
+
+    return {
+        type: '',
+        operator: key,
+        singleOperator: false
     }
 
 }
