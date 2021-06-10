@@ -6,16 +6,92 @@
  */
 
 
-let firstNumber = 0, secondNumber = 0, result = 0, operator = '';
+let isFirstValue = false, isSecondValue = false;
+
+let firstValue = '', secondValue = '', operator = ''; // stores the display string accordingly
+
 let display = '';
+let displayMode = 100; // to capture the firstNumber argument // 200 -> capture secondValur argument
+
+
+
 
 window.addEventListener('keydown', function (e) {
 
     let key = e.key;
-    if (key == 'Enter')
-            key = '=';
+    if (key == 'Enter') key = '=';
+
     processEntryKey(key);
 });
+
+
+function processEntryKey (eKey){
+
+
+    const entry = entryType(eKey);
+        if( !entry.type ) return; // an empty value on type, quits the function
+
+    if( displayMode == 100 ){
+
+        if( !isFirstValue ) /// clears the entry only once, before start entering the numbers sequence
+            display = '';
+
+        if ( entry.type == 'number' || ( entry.type == 'dot' && !hasDot(display) ) ){            
+
+            display = display + eKey;
+            isFirstValue = true; // a valid number sequence has been entered, but still dislpayMode 100 to keep processing the entries
+
+            firstValue = display;
+            setDisplay(display);
+        }
+    
+    }
+
+    if( entry.type == 'operator' && isFirstValue && !entry.singleOperator ) { // if an operator is entered, after isFirstValue a valid sequence
+        operator = eKey;
+        displayMode = 200;
+        console.log( `${firstValue} ${operator} ${secondValue} = ${displayMode}`);
+        
+    }
+
+    if( displayMode == 200 ){
+
+        if( !secondValue )
+            display = ''; /// clears the entry only once, before start entering the numbers sequence
+
+        if ( entry.type == 'number' || ( entry.type == 'dot' && !hasDot(display) ) ){
+
+            display = display + eKey;
+            isSecondValue = true; // a valid number sequence has been entered, now dislpayMode 200 for the secondValue entries
+            
+            secondValue = display;
+            setDisplay(display);
+        }
+
+    }
+
+    if( entry.type == 'equal' && isSecondValue ) {
+
+        const result = operate(operator,parseFloat(firstValue),parseFloat(secondValue) );
+        display = result.toString();
+        setDisplay(display);
+
+        console.log( `${firstValue} ${operator} ${secondValue} = ${result}`);
+        
+        firstValue = display;
+        isFirstValue = true;
+        
+        displayMode = 200;
+        
+        secondValue = '';
+        operator = '';
+        isSecondValue = false;
+        
+    }
+
+
+
+}
 
 
 /// For buttons with Numbers, adds the eventListener
@@ -46,66 +122,20 @@ buttons.forEach((item) => {
     });
 });
 
-function processEntryKey(eKey) {
-
-    const entry = entryType(eKey);
-
-    if( !entry.type ) return;
-
-    if (!firstNumber) { // as many numbers and one DOT as the firstValue is no assigned
-        if (entry.type == 'number' ||
-            (entry.type == 'dot' && !hasDot(display))) {
-            display = display + eKey;
-            setDisplay(display);
-        }
-
-        if (entry.type == 'operator') {
-
-            if (!entry.singleOperator) { // when the operator is a two number operator
-                firstNumber = parseFloat(display);
-                operator = entry.operator;
-            }
-        }
-    } else {
-
-        if (!secondNumber ) {
-            display = '';
-            setDisplay(display);
-        }
-
-        if (entry.type == 'number' ||
-            (entry.type == 'dot' && !hasDot(display))) {
-            display = display + eKey;
-            secondNumber = parseFloat(display);
-            setDisplay(display);
-
-        }
-
-        if (entry.type == 'equal' || entry.type == 'operator') {
-            secondNumber = parseFloat(display);
-            result = operate(operator, firstNumber, secondNumber);
-            display = Math.round(result * 100000000 + Number.EPSILON) / 100000000;
-            setDisplay(display);
-            
-            firstNumber = 0;
-            secondNumber = 0;
- 
-        }
-
-    }
-
-}
-
 
 const hasDot = (str) =>
     str.indexOf('.') !== -1;
 
 const clearEntries = () => {
-    firstNumber = 0;
+
+    displayMode = 100;
+    firstValue = '';
+    isFirtValue = false;
+
     operator = '';
-    secondNumber = 0;
-    result = 0;
-    display = '';
+    secondValue = '';
+    isSecondValue = false;
+    display = '0';
 }
 
 const entryType = (key) => {
@@ -143,6 +173,13 @@ const entryType = (key) => {
             singleOperator: false
         }
     }
+    if( key === 'Backspace'){
+        return {
+            type: 'Backspace',
+            operator: key,
+            singleOperator: false
+        }
+    }
 
     return {
         type: '',
@@ -154,7 +191,7 @@ const entryType = (key) => {
 
 function setDisplay(txt) {
     const display = document.querySelector('#displaytxt');
-    display.textContent = txt;
+    display.textContent = txt.substr(0,13);
 
 }
 
@@ -163,7 +200,7 @@ function setDisplay(txt) {
 const add = (a, b) => (a) + (b);
 const substract = (a, b) => (a) - (b);
 const multiply = (a, b) => (a) * (b);
-const divide = (a, b) => (a) / (b);
+const divide = (a, b) =>  (a/b);
 const percentage = (a) => (a) / 100;
 const shiftSign = (a) => ((a) * (-1));
 

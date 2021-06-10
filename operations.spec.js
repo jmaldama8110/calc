@@ -11,7 +11,7 @@ describe('operations: add, substract, multiply, divide, percentage', () => {
         expect(operate('*',"2","3")).toBe(6);
     });
     test('divide one number over another', () => {
-        expect(operate('/',"10","2")).toBe(5);
+        expect(operate('/',"10","0")).toBe(0);
     });
     test('obtain the percentage factor',()=>{
         expect( operate('%',"7","3")).toBe(0.07);
